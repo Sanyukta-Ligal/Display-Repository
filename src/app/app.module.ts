@@ -20,6 +20,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ROUTING } from './app.routing';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
+import {MatCardModule} from '@angular/material/card';
 
 import * as services from './services';
 
@@ -35,6 +36,7 @@ import * as services from './services';
     AppRoutingModule,
     BrowserModule,
     AppRoutingModule,
+    MatCardModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,

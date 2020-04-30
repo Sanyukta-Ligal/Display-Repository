@@ -17,7 +17,8 @@ export class HttpService {
         return headers;
     }
 
-    get(selectedItem?) {
+    get(selectedItem) {
+
         // return this.http.get(`&s=${term}&page=${page}&type=${type}`)
         // api.github.com/user/repos?page=3&per_page=10
         // let url='/rubinius/repos';
@@ -26,7 +27,7 @@ export class HttpService {
     //     console.log("itemselected for search",selectedItem);
     //    return
         // let url=`/${itemSelected}/repos`;
-        let url='users/rubinius/repos';
+        let url=`/users/${selectedItem}/repos`;
         // let headers = new HttpHeaders();
         // headers = this.createHeader(headers);
         return this.http.get(`${API_BASE_URL}${url}`)  

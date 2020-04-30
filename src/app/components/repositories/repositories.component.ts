@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../services';
-import {FormControl} from '@angular/forms';
-import {Observable,of} from 'rxjs';
-import {map, startWith,filter} from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
+import { Observable, of } from 'rxjs';
+import { map, startWith, filter } from 'rxjs/operators';
 import {
   distinctUntilChanged,
   debounceTime,
@@ -14,6 +14,7 @@ import {
 
 
 
+
 @Component({
   selector: 'app-repositories',
   templateUrl: './repositories.component.html',
@@ -21,93 +22,108 @@ import {
 })
 export class RepositoriesComponent implements OnInit {
   totalItem: number;
-  repositories:any;
+  repositories: any;
   myControl = new FormControl();
-  options:any;
+  options: any;
   filteredOptions: any;
-  selectedItem:any='';
-  user:any;
-  searchFailed:boolean;
-  providerSearch:boolean;
-  p:number=1;
+  selectedItem: any = '';
+  user: any;
+  searchFailed: boolean;
+  providerSearch: boolean;
+  p: number = 1;
+  image;
+  userName: string;
+  selectedValue: any;
+  repoLists:any;
+  filterLists = [{ value: 'All', name: 'All' }, { value: 'Fork', name: 'Fork' }, { value: 'Archived', name: 'Archived' }];
 
   constructor(private _httpClient: HttpService) { }
 
   ngOnInit() {
-    // let term='iambi';
-    // this._httpClient.searchUsers(term).subscribe(res=>
-    //   console.log("res",res)
-
-    // )
-    // this._httpClient.getUsers().subscribe(res=>
-    //   {
-    //     this.options=res;
-    //     // this.filterValue();
-    //   });
-
-    //    this._httpClient.get().subscribe((result: any) => {
-    //   this.repositories=result;
-    //   console.log("repositories list",this.repositories);
-    //   this.totalItem = result.length;
-    // }
-    // );
-      
-      this.filterValue();
-      // this.filteredOptions = this.myControl.valueChanges
-      // .pipe(
-      //   startWith(''),
-      //   map(value => this._filter(value))
-      // );
-        // console.log("res for user lists",res)
-      }
-      selectItem(){
-
-      }
-      ngOnChanges(){
-        if( this.myControl.valueChanges){
-          console.log("filter on change",this.myControl.value)
-        }
-       
-       
-        this.filterValue();
-      }
-      getPosts(value){
-        this.selectedItem=value;
-        console.log("option selected value",value)
-      }
-
-      handleClick($event){
-        console.log("click on search",this.myControl.value);
-        let selectedValue;
-        (this.myControl.value||this.myControl.value!=null)?(selectedValue=this.myControl.value):(selectedValue='iambipinpaul');
-       
-        // if(this.myControl.value){
-          this._httpClient.get(selectedValue).subscribe((result: any) => {
-      this.repositories=result;
-      console.log("repositories list",this.repositories);
+    let selectedValue = 'tpope';
+    this._httpClient.get(selectedValue).subscribe((result: any) => {
+      this.repoLists=result;
+      this.repositories = result;
+      this.image = result[0].owner.avatar_url;
+      this.userName = result[0].owner.login;
+      console.log("repositories list", this.repositories);
       this.totalItem = result.length;
     }
     );
 
-        // }
-        console.log("event",$event);
+  }
+  selectItem() {
+
+  }
+  modelValueChange($event) {
+let result;
+    console.log("value change on filter ", $event,this.repositories);
+    let filterBy = $event.toLowerCase();
+    if(filterBy=="archived"){
+      result = this.repositories.filter(val => val.archived == true);
+      this.repositories=result;
+    }else if(filterBy=="fork"){
+      result = this.repositories.filter(val => val.fork == true);
+      this.repositories=result;
+    }else{
+      this.repositories=this.repoLists;
+    }
+    
+    
+    console.log("filter by results of fork and archived", result,filterBy)
+  }
+
+
+  handleClick($event) {
+    let selectedValue
+    if ((this.myControl.value.login) || (!this.myControl.value)) {
+      if (this.myControl.value.login) {
+        selectedValue = this.myControl.value.login;
+      } else {
+        selectedValue = 'tpope';
       }
-  
-     
-      
-      
+      this._httpClient.get(selectedValue).subscribe((result: any) => {
+        this.repositories = result;
+        this.image = result[0].owner.avatar_url;
+        console.log("user names", this.repositories);
+        this.userName = result[0].owner.login;
+        this.totalItem = result.length;
+      }
+      );
+      console.log("loginnot undefined");
+    }
+    return
+  }
 
-     
-      
-     
+  //   console.log("click on search",this.myControl.value.login,this.myControl.value);
+  //   let selectedValue;
+  //   (this.myControl.value.login||this.myControl.value!=null)?(selectedValue=this.myControl.value.login):(selectedValue='iambipinpaul');
+  //  console.log("selectedvalue",selectedValue);
+  // //  return
+  //   // if(this.myControl.value){
+  //       this._httpClient.get(selectedValue).subscribe((result: any) => {
+  //   this.repositories=result;
+  //   this.totalItem = result.length;
+  // }
+  // );
 
-    // this._httpClient.get().subscribe((result: any) => {
-    //   this.repositories=result;
-    //   console.log("repositories list",this.repositories);
-    //   this.totalItem = result.length;
-    // }
-    // );
-  
+  // }
+
+
+
+
+
+
+
+
+
+  // this._httpClient.get().subscribe((result: any) => {
+  //   this.repositories=result;
+  //   console.log("repositories list",this.repositories);
+  //   this.totalItem = result.length;
+  // }
+  // );
+
 
   _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
@@ -119,25 +135,9 @@ export class RepositoriesComponent implements OnInit {
 
 
 
-  // goToPage(page) {
-  //   // api.github.com/user/repos?page=3&per_page=10
-  //   this.p = 2;
-  //   this.per_page = 10;
-  //   this._httpClient.get(this.p, this.per_page).subscribe(result =>
-  //     console.log("result for pagination", result))
-  //   // if (this.isBrowser) {
-  //   //   document.getElementById('el2_search').scrollIntoView({ behavior: 'smooth' });
-  //   // }
-  // }
 
-  filterValue(){
-    this.filteredOptions = this.myControl.valueChanges
-    .pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
-    console.log("filtered options",this.filteredOptions,this.myControl)
-  }
+
+
 
   searchUser = (text$: Observable<string>) =>
     text$.pipe(
@@ -149,7 +149,7 @@ export class RepositoriesComponent implements OnInit {
         if (term.length > 2) {
           return this._httpClient.searchUsers(term).pipe(map(a => {
             this.providerSearch = false;
-            console.log("res",a);
+            console.log("res", a);
             return a.items;
           }
           ),
