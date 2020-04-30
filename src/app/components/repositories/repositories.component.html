@@ -1,0 +1,105 @@
+<!-- <div style="text-align:center">
+  <h1>
+    Welcome to {{ title }}!
+  </h1>
+  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+</div>
+<h2>Here are some links to help you start: </h2>
+<ul>
+  <li>
+    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
+  </li>
+  <li>
+    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
+  </li>
+  <li>
+    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
+  </li>
+  kjhkjhjhkh
+</ul> -->
+
+
+<!-- <mat-list> -->
+
+  <!-- <mat-divider></mat-divider> -->
+
+  <fieldset class="form-inline">
+    <div class="form-group">
+      <label for="typeahead-http">Search for a wiki page:</label>
+      <input id="typeahead-http" type="text" class="form-control mx-sm-3" [class.is-invalid]="searchFailed" [formControl]="myControl" [ngbTypeahead]="searchUser" placeholder="Wikipedia search" />
+      <div class="invalid-feedback" *ngIf="searchFailed">Sorry, suggestions could not be loaded.</div>
+    </div>
+  </fieldset>
+  <div class="form-group">
+
+  
+    
+      <!-- <mat-form-field class="example-full-width"> -->
+        <!-- <input type="text"
+               placeholder="Pick one"
+               matInput
+               [formControl]="myControl"
+               [matAutocomplete]="auto"> -->
+               <!-- <mat-icon style="margin-left: 460px" (click)="handleClick($event)">search</mat-icon> -->
+                <ng-template #rt1 let-r="result" let-t="term">
+                <div class="d-flex justify-content-between">
+                   <ngb-highlight [result]="r.login" [term]="t"></ngb-highlight> 
+               
+                </div>
+              </ng-template> 
+        <input id="typeahead-http" type="text" class="form-control"
+                [class.is-invalid]="searchFailed" [ngbTypeahead]="searchUser" placeholder="Search User"
+                [formControl]="myControl" [resultTemplate]="rt1" [inputFormatter]="inputFormatterForProvider"
+                (selectItem)="selectItem($event)" [focusFirst]="false" />
+        <!-- <mat-autocomplete #auto="matAutocomplete" (optionSelected)='getPosts($event.option.value)'>
+
+          
+              <mat-option *ngFor="let option of filteredOptions|async" [value]="option.login" (onChange)="onChange()">
+                  {{option.login}}
+                </mat-option> -->
+          <!-- </mat-select> -->
+      
+        <!-- </mat-autocomplete> -->
+      <!-- </mat-form-field> -->
+    <!-- </form> -->
+    </div>
+  <h3 mat-subheader>Repositories</h3>
+  <!-- <mat-list-item *ngFor="let repo of repositories| paginate: { itemsPerPage: 10, currentPage: p, totalItems: totalItem }"> -->
+    <ul *ngFor="let repo of repositories| paginate: { itemsPerPage: 10, currentPage: p, totalItems: totalItem }">
+      <li>
+          <a href="{{repo.svn_url}}" target="_blank">{{repo.name}}</a>
+          <br>
+          <p>{{repo.description}}</p>
+          <mat-divider></mat-divider>
+        
+      </li>
+    </ul>
+    
+     
+    
+  
+ 
+   
+   
+    <!-- <p mat-line class="demo-2"> {{note.updated}} </p> -->
+  <!-- </mat-list-item> -->
+<!-- </mat-list> -->
+<div class="pagination pagination-lg justify-content-center  pt-5 pb-5">
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>
+</div>
+<style>
+  .example-form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.example-full-width {
+  width: 100%;
+}
+</style>
+<div class="form-group">
+    <label for="typeahead-http">Search for a wiki page:</label>
+    <input id="typeahead-http" type="text" class="form-control mx-sm-3" [class.is-invalid]="searchFailed"  [formControl]="myControl" [ngbTypeahead]="searchUser" placeholder="Wikipedia search" />
+    <div class="invalid-feedback" *ngIf="searchFailed">Sorry, suggestions could not be loaded.</div>
+  </div>
