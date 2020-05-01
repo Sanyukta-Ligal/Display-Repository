@@ -21,14 +21,17 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ROUTING } from './app.routing';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import {MatCardModule} from '@angular/material/card';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 import * as services from './services';
+import { UserRepositoriesComponent } from './components/repositories/user-repositories/user-repositories.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     RepositoriesComponent,
+    UserRepositoriesComponent,
     // JwPaginationComponent
   ],
   imports: [
@@ -42,6 +45,7 @@ import * as services from './services';
     ReactiveFormsModule,
     NgbModule,
     NgOptionHighlightModule,
+    MatProgressSpinnerModule,
     // MatInputModule ,
     MatDividerModule,
     MatIconModule,
@@ -60,7 +64,8 @@ import * as services from './services';
     }),
     BrowserAnimationsModule,
   ],
-  providers: [ services.HttpService],
+  providers: [ services.HttpService,
+  services.GitHubApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
