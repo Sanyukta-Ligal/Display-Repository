@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpService, GitHubApiService } from '../../../services';
+import { GitHubApiService } from '../../../services';
 import { FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
-import { map, startWith, filter } from 'rxjs/operators';
+import { map, } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import {
   distinctUntilChanged,
@@ -10,9 +10,7 @@ import {
   tap,
   switchMap,
   catchError,
-
 } from 'rxjs/operators';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-user-repositories',
@@ -21,97 +19,104 @@ import { Location } from '@angular/common';
 })
 export class UserRepositoriesComponent implements OnInit {
   totalItem: number;
-  repositories: any;
+  repositories: [];
   myControl = new FormControl();
-  options: any;
-  filteredOptions: any;
-  selectedItem: any = '';
-  user: any;
-  searchFailed: boolean;
-  providerSearch: boolean;
-  p: number = 1;
-  image;
+  searchedUser: string;
+  userSearch: boolean;
+  image: string;
   userName: string;
-  selectedValue: any;
+  p: number = 1;
   repoLists: any;
+  forFilter: boolean;
+  filterBy: string;
   filterLists = [{ value: 'All', name: 'All' }, { value: 'Fork', name: 'Fork' }, { value: 'Archived', name: 'Archived' }];
-  spinning = true;
-  constructor(private _httpClient: HttpService, private _httpGitHubApiService: GitHubApiService, private _router: Router) { }
+  spinning: boolean = true;
+  constructor(private _httpGitHubApiService: GitHubApiService, private _router: Router) { }
 
-  ngOnInit(): void {
-    let selectedValue = 'tpope';
-    this.getRepositories(selectedValue);
-  }
-
-  getRepositories(selectedValue: string) {
-    this._httpGitHubApiService.getRepositories(selectedValue).subscribe((result: any) => {
-      this.repositories = result;
-      this.spinning = false;
-      this.image = result[0].owner.avatar_url;
-      this.userName = result[0].owner.login;
-      this.totalItem = result.length;
-      this.repoLists = result;
-      this._router.navigate(["/repositories/" + `${selectedValue}`]);
-    }
-    );
+  ngOnInit() {
+    let searchedUser = 'tpope';
+    this.getRepositories(searchedUser);
   }
 
   modelValueChange($event) {
-    let result;
-    let filterBy = $event.toLowerCase();
-    if (filterBy == "archived") {
-      result = this.repositories.filter(val => val.archived == true);
-      this.repositories = result;
-    } else if (filterBy == "fork") {
-      result = this.repositories.filter(val => val.fork == true);
-      this.repositories = result;
+    let filteredRepositories;
+    if ($event.toLowerCase() == "archived") {
+      filteredRepositories = this.repoLists.filter(val => val.archived == true);
+      this.repositories = filteredRepositories;
+    } else if ($event.toLowerCase() == "fork") {
+      filteredRepositories = this.repoLists.filter(val => val.fork == true);
+      this.repositories = filteredRepositories;
     } else {
       this.repositories = this.repoLists;
     }
-    this.totalItem = this.repositories.length
+    this.forFilter = true;
+    this.totalItem = this.repositories.length;
   }
 
-  handleClick($event) {
-    let selectedValue
+  search() {
     if (this.myControl.value.login) {
+      let searchedUser;
+
+      this.forFilter = false;
       this.spinning = true;
       if (this.myControl.value.login) {
-        selectedValue = this.myControl.value.login;
+        searchedUser = this.myControl.value.login;
       } else {
-        selectedValue = 'tpope';
+        searchedUser = 'tpope';
       }
-      this.getRepositories(selectedValue);
+      this.getRepositories(searchedUser);
     }
   }
 
-  inputFormatterForProvider = (x: { login: string }) => x.login;
+  inputFormatterForUser = (x: { login: string }) => x.login;
 
-  searchUser = (text$: Observable<string>) =>
+  loadUsers = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      tap(() => this.providerSearch
+      tap(() => this.userSearch
         = true),
       switchMap(term => {
         if (term.length > 2) {
           return this._httpGitHubApiService.searchUsers(term).pipe(map(a => {
-            this.providerSearch = false;
+            this.userSearch = false;
             return a.items;
           }
           ),
-            tap(() => this.searchFailed = false),
             catchError(() => {
-              this.searchFailed = true;
-              this.providerSearch = false;
+              this.userSearch
+                = false;
               return of([]);
             }));
         } else {
-          this.providerSearch = false;
+          this.userSearch
+            = false;
           return of([]);
         }
       }
       ),
-      tap(() => this.providerSearch = false)
+      tap(() => this.userSearch = false)
     )
 
+  getRepositories(searchedUser: string) {
+    this._httpGitHubApiService.getRepositories(searchedUser).subscribe((result: any) => {
+      this.repositories = result;
+      this.repoLists = [... this.repositories];
+      this.spinning = false;
+      if (result && result.length > 0) {
+        this.filterBy = "All";
+        this.totalItem = result.length;
+      } else {
+        this.filterBy = '';
+      }
+      this._router.navigate(["/repositories/" + `${searchedUser}`]);
+      if (this.myControl.value && this.myControl.value.login) {
+        this.image = this.myControl.value.avatar_url;
+        this.userName = this.myControl.value.login;
+      } else if (result && result.length > 0) {
+        this.image = result[0].owner.avatar_url;
+        this.userName = result[0].owner.login;
+      }
+    });
+  }
 }

@@ -4,5 +4,4 @@ import { RoutePublic } from '../app/routes/index';
 
 export const ROUTING: Routes = [
   { path: '', children: RoutePublic },
-//   { path: '**', redirectTo: '/' },
 ];

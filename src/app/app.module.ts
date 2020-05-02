@@ -7,13 +7,8 @@ import { RepositoriesComponent } from './components/repositories/repositories.co
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-// import {MatFormFieldModule,MatInputModule }from '@angular/material/';
 import {MatDividerModule} from '@angular/material/divider';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatListModule } from '@angular/material/list';
 import { NgxPaginationModule } from 'ngx-pagination';
-// import { JwPaginationComponent } from 'jw-angular-pagination';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { ReactiveFormsModule,FormsModule} from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
 import {MatIconModule} from '@angular/material/icon';
@@ -22,6 +17,7 @@ import { ROUTING } from './app.routing';
 import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import {MatCardModule} from '@angular/material/card';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatToolbarModule} from '@angular/material/toolbar'; 
 
 import * as services from './services';
 import { UserRepositoriesComponent } from './components/repositories/user-repositories/user-repositories.component';
@@ -31,12 +27,10 @@ import { UserRepositoriesComponent } from './components/repositories/user-reposi
   declarations: [
     AppComponent,
     RepositoriesComponent,
-    UserRepositoriesComponent,
-    // JwPaginationComponent
+    UserRepositoriesComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     BrowserModule,
     AppRoutingModule,
     MatCardModule,
@@ -46,21 +40,16 @@ import { UserRepositoriesComponent } from './components/repositories/user-reposi
     NgbModule,
     NgOptionHighlightModule,
     MatProgressSpinnerModule,
-    // MatInputModule ,
+    MatToolbarModule,
     MatDividerModule,
     MatIconModule,
     MatSelectModule,
     NgxPaginationModule,
-    MatAutocompleteModule,
-    // MatFormFieldModule,
-    MatListModule,
-    MatSliderModule,
     RouterModule.forRoot(ROUTING, {
       preloadingStrategy: PreloadAllModules,
       scrollPositionRestoration: 'enabled',
       anchorScrolling: 'enabled',
       useHash: false
-      // onSameUrlNavigation: 'reload'
     }),
     BrowserAnimationsModule,
   ],

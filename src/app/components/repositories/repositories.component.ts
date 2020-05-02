@@ -7,14 +7,12 @@ import { Router } from '@angular/router';
   styleUrls: ['./repositories.component.scss']
 })
 export class RepositoriesComponent implements OnInit {
-  
-
   constructor(private _router:Router
  ) { }
 
   ngOnInit() {
-    let selectedValue = 'tpope';
-    this._router.navigate(["/repositories/" + selectedValue])
+    let defaultUser = 'tpope';
+    this._router.navigate(["/repositories/" + defaultUser]);
   }
  
 }
